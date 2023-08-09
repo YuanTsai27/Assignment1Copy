@@ -13,7 +13,11 @@
 
 class App {
  private:
-  // Add private fields and methods here
+ // account details
+   std::string username_;
+   std::string credit_amount_;
+   std::string additional_credit_;
+
  public:
   App();
   void CreateNewAccount(const std::string &username,
