@@ -21,6 +21,7 @@ App::App() {
 void App::CreateNewAccount(const std::string &username_input,
                            const std::string &credit_amount) {
   // TODO implement
+  test test test
 }
 
 void App::TopUpAccount(const std::string &username_input,
