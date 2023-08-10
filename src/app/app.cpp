@@ -7,24 +7,28 @@
 
 using namespace std;
 
+int App::next_account_number_; //initialisation of the account number static field
+
 /*
 *****************************
   This is where you start!
   However, make sure you do not not write all your code in a single file!
 *****************************
 */
+std::string App::GetUsername() const { return username_; }
 
 App::App() {
   // TODO implement
 
 }
 
+/*
 int Person::GetAccountNumber() const {
   return account_number_;
-}
+}*/
 
 void App::CreateNewAccount(const std::string &username_input,
-                           const std::string &credit_amount) {
+                           const std::string &credit_amount){
 
   /* possible rejection scenarios
   - username less than 2 letters
@@ -32,12 +36,12 @@ void App::CreateNewAccount(const std::string &username_input,
   - input credit not whole number (but account creation proceeds)
   */
 
+  /*
+
   if (length(&username_input) < 2){
     string m  = Message::ERROR_CREATE_ACCOUNT_SHORT_USERNAME.GetMessage({username_input, credit_amount});
   }
   else if { //account already exists
-
-
   } 
   else {
     //successful account creation
@@ -50,13 +54,28 @@ void App::CreateNewAccount(const std::string &username_input,
     credit_amount_ = "0"; // if input credit amount is not a whole number
     credit_balance_vector_.push_back(&credit_amount);
   }
-
-  App this(username_input,credit_amount, 0);
+  credit_balance_vector_.push_back(&credit_amount);
+  App this(&username_input,&credit_amount, 0);
   usernames_vector_.push_back(&username_input);
   string m  = Message::ACCOUNT_CREATED.GetMessage({&username_input, &credit_amount});
   }
+  cout << m << endl;  
+  */
 
-  cout << m << endl; 
+/*
+  username_ = username_input;
+  credit_amount_ = credit_amount;
+  account_number_ = next_account_number_;
+  next_account_number_ ++;
+
+  //App this(&username_input, &credit_amount, "0");
+  //string m  = Message::ACCOUNT_CREATED.GetMessage({username_input, credit_amount});
+  string m = "hello";
+
+  cout << m << endl;
+  /*cout << "Hi, my username is" << &username_input.GetUsername() << " and my balance is" << age_
+       << " dollars" << endl;*/ 
+
   
 }
 
@@ -69,7 +88,7 @@ void App::TopUpAccount(const std::string &username_input,
 
 void App::PrintAccounts() const {
   // TODO implement
- 
+  cout << "hello" << endl;
 
 }
 
