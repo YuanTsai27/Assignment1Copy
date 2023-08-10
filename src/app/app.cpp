@@ -20,10 +20,9 @@ using namespace std;
 *****************************
 */
 
-int App::num_accounts_ = 0; // initialisation of the static field
-std::vector<int> App::credit_balance_vector_ = {1};
-std::vector<string> usernames_vector_ = {"hello"};
-
+int App::num_accounts_ = 0; //initialisation of static fields
+std::vector<std::string> App::usernames_vector_ = {};
+std::vector<int> App::credit_balance_vector_ = {};
 
 App::App() {
   // TODO implement
@@ -38,33 +37,73 @@ void App::CreateNewAccount(const std::string &username_input,
   - account username already exists 
   - input credit not whole number (but account creation proceeds)
   */
-  string m  = Message::ACCOUNT_CREATED.GetMessage({username_input, credit_amount}); //initialisating m to print
+
+  
+  string m1  = "initialisation"; //initialisating messages to print
+  string m2 = "initialisation";
   bool isUsernameDuplicated = false;
+  bool isCreditInvalid = false;
+  bool CreditHasLetters = false;
+  int credit_int = 0; //setting credit number to 0
+  std::string username_lowercased = Utils::GetLowercase(username_input);
 
-  //process to check if account is duplicated
+  // process to check if input credit is valid
 
+  for (int i = 0; i < credit_amount.length(); i++) {
+        if ( credit_amount[i] < '0' || credit_amount[i] > '9') {
+            CreditHasLetters = true;
+            isCreditInvalid = true;
+            m1 = Message::ERROR_CREATE_ACCOUNT_INVALID_CREDIT.GetMessage({credit_amount, to_string(credit_int)});
+            break;
+        }
+  }
+
+  if (!CreditHasLetters){
+      if ((floor(std::stod(credit_amount)) != std::stod(credit_amount)) || (std::stod(credit_amount) < 0)){ 
+        isCreditInvalid = true;
+        credit_int = 0;
+
+        if (std::stod(credit_amount) < 0){ //setting appropriate message regarding invalid credit 
+          m1 = Message::ERROR_CREATE_ACCOUNT_NEGATIVE_CREDIT.GetMessage({to_string(credit_int)});
+        } else {
+          m1 = Message::ERROR_CREATE_ACCOUNT_INVALID_CREDIT.GetMessage({credit_amount, to_string(credit_int)});
+        }
+        
+      }else{
+        credit_int = std::stoi(credit_amount); // initiallising credit number for print output
+      }
+  }
+
+  //process to check if account is duplicated, using static integer of number of accounts made.
+  if (num_accounts_ > 0){
+    for (int i = 0; i < num_accounts_; i++) {
+      if(usernames_vector_.at(i) == username_input){
+        isUsernameDuplicated = true;
+      }
+    }
+  }
 
   if (username_input.length() < 2){
-      m  = Message::ERROR_CREATE_ACCOUNT_SHORT_USERNAME.GetMessage({username_input, credit_amount}); //changing m to duplicate msg
-  } else if (isUsernameDuplicated == true){
-      m = Message::ERROR_CREATE_ACCOUNT_DUPLICATE_USERNAME.GetMessage({username_input, credit_amount});
-  } else{
+      m2  = Message::ERROR_CREATE_ACCOUNT_SHORT_USERNAME.GetMessage({username_lowercased, to_string(credit_int)}); //changing m to duplicate msg
+  } else if (isUsernameDuplicated){
+      m2 = Message::ERROR_CREATE_ACCOUNT_DUPLICATE_USERNAME.GetMessage({username_lowercased, to_string(credit_int)});
+  } else {
 
-    //usernames_vector_.push_back(username_input);
+      credit_balance_vector_.push_back(credit_int); //registering usernames and credit into account static vectors
+      usernames_vector_.push_back(username_lowercased);
 
-      if (floor(std::stod(credit_amount)) != std::stod(credit_amount)){ //checking if credit input is a whole number
-        credit_balance_vector_.push_back(0); //if input credit amount is not a whole number
-      } else {
-        credit_balance_vector_.push_back(std::stod(credit_amount));
-      }
-
-      //cout << credit_balance_vector_.at(0) << endl;
-      cout << credit_balance_vector_.at(num_accounts_ + 1) << endl;
-      cout << usernames_vector_.at(0) << endl;
+      m2 = Message::ACCOUNT_CREATED.GetMessage({username_lowercased, to_string(credit_int)});
       
       num_accounts_ ++;
-
   }
+
+  //printing relevant outputs
+  if (isCreditInvalid){
+      cout << m1 << endl;
+  }
+      
+  cout << m2 << endl;
+  
   
 }
 
