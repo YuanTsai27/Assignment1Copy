@@ -1,4 +1,10 @@
 #include "app.h"
+#include "account.h"
+
+#include <string>
+#include <memory>
+#include <vector>
+#include <cmath>
 
 #include <iostream>
 
@@ -7,75 +13,58 @@
 
 using namespace std;
 
-int App::next_account_number_; //initialisation of the account number static field
-
 /*
 *****************************
   This is where you start!
   However, make sure you do not not write all your code in a single file!
 *****************************
 */
-std::string App::GetUsername() const { return username_; }
+
+int App::num_accounts_ = 0; // initialisation of the static field
+std::vector<int> App::credit_balance_vector_ = {1};
+std::vector<string> usernames_vector_ = {"hello"};
+
 
 App::App() {
   // TODO implement
 
 }
 
-/*
-int Person::GetAccountNumber() const {
-  return account_number_;
-}*/
 
 void App::CreateNewAccount(const std::string &username_input,
                            const std::string &credit_amount){
-
   /* possible rejection scenarios
   - username less than 2 letters
   - account username already exists 
   - input credit not whole number (but account creation proceeds)
   */
+  string m  = Message::ACCOUNT_CREATED.GetMessage({username_input, credit_amount}); //initialisating m to print
+  bool isUsernameDuplicated = false;
 
-  /*
+  //process to check if account is duplicated
 
-  if (length(&username_input) < 2){
-    string m  = Message::ERROR_CREATE_ACCOUNT_SHORT_USERNAME.GetMessage({username_input, credit_amount});
+
+  if (username_input.length() < 2){
+      m  = Message::ERROR_CREATE_ACCOUNT_SHORT_USERNAME.GetMessage({username_input, credit_amount}); //changing m to duplicate msg
+  } else if (isUsernameDuplicated == true){
+      m = Message::ERROR_CREATE_ACCOUNT_DUPLICATE_USERNAME.GetMessage({username_input, credit_amount});
+  } else{
+
+    //usernames_vector_.push_back(username_input);
+
+      if (floor(std::stod(credit_amount)) != std::stod(credit_amount)){ //checking if credit input is a whole number
+        credit_balance_vector_.push_back(0); //if input credit amount is not a whole number
+      } else {
+        credit_balance_vector_.push_back(std::stod(credit_amount));
+      }
+
+      //cout << credit_balance_vector_.at(0) << endl;
+      cout << credit_balance_vector_.at(num_accounts_ + 1) << endl;
+      cout << usernames_vector_.at(0) << endl;
+      
+      num_accounts_ ++;
+
   }
-  else if { //account already exists
-  } 
-  else {
-    //successful account creation
-  username_ = username_input;
-  credit_amount_ = credit_amount;
-  account_number_ = next_account_number_;
-  next_account_number_ ++;
-  
-  if (floor(std::stod(str)) != std::stod(str)){
-    credit_amount_ = "0"; // if input credit amount is not a whole number
-    credit_balance_vector_.push_back(&credit_amount);
-  }
-  credit_balance_vector_.push_back(&credit_amount);
-  App this(&username_input,&credit_amount, 0);
-  usernames_vector_.push_back(&username_input);
-  string m  = Message::ACCOUNT_CREATED.GetMessage({&username_input, &credit_amount});
-  }
-  cout << m << endl;  
-  */
-
-/*
-  username_ = username_input;
-  credit_amount_ = credit_amount;
-  account_number_ = next_account_number_;
-  next_account_number_ ++;
-
-  //App this(&username_input, &credit_amount, "0");
-  //string m  = Message::ACCOUNT_CREATED.GetMessage({username_input, credit_amount});
-  string m = "hello";
-
-  cout << m << endl;
-  /*cout << "Hi, my username is" << &username_input.GetUsername() << " and my balance is" << age_
-       << " dollars" << endl;*/ 
-
   
 }
 
@@ -88,7 +77,6 @@ void App::TopUpAccount(const std::string &username_input,
 
 void App::PrintAccounts() const {
   // TODO implement
-  cout << "hello" << endl;
 
 }
 

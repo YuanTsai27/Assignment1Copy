@@ -1,8 +1,12 @@
 #ifndef APP_H
 #define APP_H
 
+#include "account.h"
+
 #include <string>
 #include <vector>
+
+using namespace std;
 
 /*
 *****************************
@@ -11,16 +15,16 @@
 *****************************
 */
 
+
 class App {
  private:
- // account details
-   std::string username_;
-   std::string credit_amount_;
-   std::string additional_credit_;
-   int account_number_;
-   static int next_account_number_;
-   //static vector(App) usernames_vector_;
-   //static vector(App) credit_balance_vector_;
+  std::string username_;
+  std::string credit_amount_;
+  static int num_accounts_;
+  static std::vector<string> usernames_vector_;
+  static std::vector<int> credit_balance_vector_;
+
+
 
  public:
   App();
@@ -39,7 +43,6 @@ class App {
                               const std::string &size,
                               const std::string &drink_type);
   void PrintAllSales() const;
-  //int GetAccountNumber() const;
   
 };
 
