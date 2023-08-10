@@ -16,7 +16,11 @@ using namespace std;
 
 App::App() {
   // TODO implement
-  int accountCounts = 0;
+
+}
+
+int Person::GetAccountNumber() const {
+  return account_number_;
 }
 
 void App::CreateNewAccount(const std::string &username_input,
@@ -39,13 +43,17 @@ void App::CreateNewAccount(const std::string &username_input,
     //successful account creation
   username_ = username_input;
   credit_amount_ = credit_amount;
+  account_number_ = next_account_number_;
+  next_account_number_ ++;
   
   if (floor(std::stod(str)) != std::stod(str)){
     credit_amount_ = "0"; // if input credit amount is not a whole number
+    credit_balance_vector_.push_back(&credit_amount);
   }
 
   App this(username_input,credit_amount, 0);
-  string m  = Message::ACCOUNT_CREATED.GetMessage({username_input, credit_amount});
+  usernames_vector_.push_back(&username_input);
+  string m  = Message::ACCOUNT_CREATED.GetMessage({&username_input, &credit_amount});
   }
 
   cout << m << endl; 

@@ -17,6 +17,10 @@ class App {
    std::string username_;
    std::string credit_amount_;
    std::string additional_credit_;
+   int account_number_;
+   static int next_account_number_;
+   static vector(App) usernames_vector_;
+   static vector(App) credit_balance_vector_;
 
  public:
   App();
@@ -35,6 +39,7 @@ class App {
                               const std::string &size,
                               const std::string &drink_type);
   void PrintAllSales() const;
+  int GetAccountNumber() const;
 };
 
 #endif  // APP_H
