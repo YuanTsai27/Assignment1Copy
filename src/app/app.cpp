@@ -41,50 +41,52 @@ void App::CreateNewAccount(const std::string &username_input,
   
   string m1  = "initialisation"; //initialisating messages to print
   string m2 = "initialisation";
-  bool isUsernameDuplicated = false;
-  bool isCreditInvalid = false;
+  bool is_username_duplicated = false; //setting up boolean variables as conditionals
+  bool is_credit_invalid = false;
   int credit_int = 0; //setting credit number to 0
-  std::string username_lowercased = Utils::GetLowercase(username_input);
+  std::string username_lowercased = Utils::GetLowercase(username_input); //lowercasing username
 
   /*
   hierachy of error messages
   1. username less than 2 letters
   2. username already exists
   3. credit is negative
-  4. credit is invalid (has non-numbers)
+  4. credit is invalid 
   
   */
 
   // process to check if input credit is valid
 
   for (int i = 0; i < credit_amount.length(); i++) {
-    if ((i == 0 && credit_amount[i] == '-')){
-      isCreditInvalid = true;
+    if ((i == 0 && credit_amount[i] == '-')){ //checking if input is negative
+      is_credit_invalid = true;
       m1 = Message::ERROR_CREATE_ACCOUNT_NEGATIVE_CREDIT.GetMessage({to_string(credit_int)});
       break;
-    } else if ( credit_amount[i] < '0' || credit_amount[i] > '9') {
-      isCreditInvalid = true;
+    } else if ( credit_amount[i] < '0' || credit_amount[i] > '9') { //checking if input has any other non-number characters
+      is_credit_invalid = true;
       m1 = Message::ERROR_CREATE_ACCOUNT_INVALID_CREDIT.GetMessage({credit_amount, to_string(credit_int)});
       break;
       }
-    }
-
-  if (!isCreditInvalid){
-        credit_int = std::stoi(credit_amount); // initiallising credit number for print output
   }
 
-  //process to check if account is duplicated, using static integer of number of accounts made.
+  if (!is_credit_invalid){
+        credit_int = std::stoi(credit_amount); // initiallising the valid credit input for print output
+
+        // if credit input is not valid, credit_int remains as 0 as initialised
+  }
+
+  //process to check if account is duplicated, using the static integer of number of accounts made.
   if (num_accounts_ > 0){
     for (int i = 0; i < num_accounts_; i++) {
       if(usernames_vector_.at(i) == username_lowercased){
-        isUsernameDuplicated = true;
+        is_username_duplicated = true;
       }
     }
   }
 
   if (username_input.length() < 2){
-      m2  = Message::ERROR_CREATE_ACCOUNT_SHORT_USERNAME.GetMessage({username_lowercased, to_string(credit_int)}); //changing m to duplicate msg
-  } else if (isUsernameDuplicated){
+      m2  = Message::ERROR_CREATE_ACCOUNT_SHORT_USERNAME.GetMessage({username_lowercased, to_string(credit_int)}); //setting appropriate string message
+  } else if (is_username_duplicated){
       m2 = Message::ERROR_CREATE_ACCOUNT_DUPLICATE_USERNAME.GetMessage({username_lowercased, to_string(credit_int)});
   } else {
 
@@ -93,12 +95,12 @@ void App::CreateNewAccount(const std::string &username_input,
 
       m2 = Message::ACCOUNT_CREATED.GetMessage({username_lowercased, to_string(credit_int)});
       
-      num_accounts_ ++;
+      num_accounts_ ++; //increment static integer
   }
 
   //printing relevant outputs
-  if (isCreditInvalid){
-      cout << m1 << endl;
+  if (is_credit_invalid){
+      cout << m1 << endl; //printing 2 strings for invalid credit input, otherwise just one.
   }
       
   cout << m2 << endl;
@@ -118,7 +120,7 @@ void App::TopUpAccount(const std::string &username_input,
   int new_credit_amount;
   std::string username_lowercased = Utils::GetLowercase(username_input);
 
-  string m = Message::USERNAME_NOT_FOUND.GetMessage({username_lowercased});;
+  string m = Message::USERNAME_NOT_FOUND.GetMessage({username_lowercased});; //initialisation, m will change is username is valid.
 
   /*hierachy of error messages
   1. username not found
@@ -127,22 +129,22 @@ void App::TopUpAccount(const std::string &username_input,
   */
 
   for (int i = 0; i < num_accounts_; i++){
-        if(usernames_vector_.at(i) == username_lowercased){
+        if(usernames_vector_.at(i) == username_lowercased){ //checking if username exists
             does_username_exist = true;
-            index = i;
+            index = i; //store this index position for later use in setting new topped up credit value
 
             break;
-          }
+        }
   }
 
   if (does_username_exist){ //if username is valid, proceed to topup credit check
 
       for (int i = 0; i < additional_credit.length(); i++) {
-        if ((i == 0 && additional_credit[i] == '-')){
+        if ((i == 0 && additional_credit[i] == '-')){ //checking if input credit is negative
           is_credit_invalid = true;
           m = Message::ERROR_TOPUP_NEGATIVE_CREDIT.GetMessage({});
           break;
-        } else if ( additional_credit[i] < '0' || additional_credit[i] > '9') {
+        } else if ( additional_credit[i] < '0' || additional_credit[i] > '9') { //checking for any other non-number characters
           is_credit_invalid = true;
           m = Message::ERROR_TOPUP_INVALID_CREDIT.GetMessage({additional_credit});
           break;
@@ -151,7 +153,7 @@ void App::TopUpAccount(const std::string &username_input,
     
   } 
 
-  if (!is_credit_invalid && does_username_exist){
+  if (!is_credit_invalid && does_username_exist){ //if conditions are satisfied, then top up
     existing_balance_int = credit_balance_vector_.at(index);
     new_credit_amount = existing_balance_int + stoi(additional_credit);
   
@@ -160,37 +162,13 @@ void App::TopUpAccount(const std::string &username_input,
     m = Message::TOP_UP_SUCCESSFUL.GetMessage({username_lowercased, additional_credit, to_string(new_credit_amount)});
   }
 
-
-  /*
-
-  // checking if there are non-numbers in additional credit string
-  for (int i = 0; i < additional_credit.length(); i++) {
-        if ( additional_credit[i] < '0' || additional_credit[i] > '9') {
-            letters_in_credit = true;
-            m = Message::ERROR_TOPUP_INVALID_CREDIT.GetMessage({additional_credit});
-            break;
-        }
-  }
-
-  // checking if additional credit topup is negative or a non-integer
-  if ((stod(additional_credit) < 0 && !letters_in_credit)){
-    negative_credit = true;
-    m = Message::ERROR_TOPUP_NEGATIVE_CREDIT.GetMessage({});
-  } else {
-    if (floor(std::stod(additional_credit)) != std::stod(additional_credit)){
-      credit_not_int = true;
-      m = Message::ERROR_TOPUP_INVALID_CREDIT.GetMessage({additional_credit});
-    }
-  }
-  */
-
   cout << m << endl;
 }
 
 void App::PrintAccounts() const {
   // TODO implement
 
-  string a, b, c, d, e;
+  string a, b, c, d, e; // %s inputs for string templates
   string m1, m2;
 
   int credit_balance;
@@ -198,9 +176,10 @@ void App::PrintAccounts() const {
   int orders_completed = 0;
   int cancelled_orders = 0;
 
+  // b represents number of accounts made
   b = to_string(num_accounts_);
 
-  // setting a
+  // setting a and c based on plural grammars
   if (num_accounts_ == 1){
     a = "is";
     c = "";
@@ -209,7 +188,7 @@ void App::PrintAccounts() const {
     c = "s";
   }
 
-  // setting c
+  // setting d based on punctuation grammar
 
   if (num_accounts_ > 0){
     d = ":";
@@ -220,15 +199,18 @@ void App::PrintAccounts() const {
   m1 = Message::PRINT_ACCOUNTS_HEADER.GetMessage({a, b, c, d});
   cout << m1 << endl;
 
-  for (int i = 0; i < num_accounts_; i++ ){
+  for (int i = 0; i < num_accounts_; i++ ){ //printing out each account with their respective details line by line
     credit_balance = credit_balance_vector_.at(i);
     username = usernames_vector_.at(i);
+
     if (orders_completed == 1){
       e = "";
     } else{
       e = "s";
     }
+
     m2 = Message::PRINT_ACCOUNT_ENTRY.GetMessage({username, to_string(credit_balance), to_string(orders_completed), e, to_string(cancelled_orders) });
+    
     cout << m2 << endl;
   }
 

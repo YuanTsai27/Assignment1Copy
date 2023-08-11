@@ -20,20 +20,12 @@ class Account {
   std::string GetCredit() const;
   int Account::GetAccNumber() const; 
 
-  static int GetNumAccounts() {
-        return num_accounts_;
-    }
+  std::string Account::GetUsername();
 
-  static const std::vector<std::string>& GetUsernamesVector() {
-      return usernames_vector_;
-  }
+  std::string Account::GetCredit() const;
 
-  std::string Account::GetUsername() const { return username_; }
+  int Account::GetAccNumber() const;
 
-std::string Account::GetCredit() const { return credit_amount_; }
-
-  static const std::vector<int>& GetCreditBalanceVector() {
-      return credit_balance_vector_;
   }
 
 };

@@ -18,8 +18,9 @@ using namespace std;
 
 class App {
  private:
-  std::string username_;
-  std::string credit_amount_;
+
+  //std::string username_;
+  //std::string credit_amount_;
   static int num_accounts_;
   static std::vector<std::string> usernames_vector_;
   static std::vector<int> credit_balance_vector_;
@@ -46,7 +47,7 @@ class App {
  
   static int GetNumAccounts() {
         return num_accounts_;
-    }
+  }
 
   static const std::vector<std::string>& GetUsernamesVector() {
       return usernames_vector_;
