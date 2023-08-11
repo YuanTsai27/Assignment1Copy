@@ -23,6 +23,13 @@ if(TASK_1_TEST_CASES)
   add_test(NAME Task_1_TopUpValid COMMAND tester_app 14)
   add_test(NAME Task_1_TopUpNegativeWithoutPrintAccounts COMMAND tester_app 16)
   add_test(NAME Task_1_TopUpUsernameNotFound COMMAND tester_app 17)
+  add_test(NAME Task_1_TopUpCapitalisation COMMAND tester_app 101)
+  add_test(NAME Task_1_PrintTwo COMMAND tester_app 102)
+  add_test(NAME Task_1_TopUpInvalid COMMAND tester_app 103)
+  add_test(NAME Task_1_ThreeAccountsTopUp COMMAND tester_app 104)
+  add_test(NAME Task_1_KeepTopUp COMMAND tester_app 105)
+  add_test(NAME Task_1_ShortNegativeDuplicate COMMAND tester_app 106)
+  add_test(NAME Task_1_NonMatching COMMAND tester_app 107)
 endif()
 
 # Add the tests to CTest for Task 2 
