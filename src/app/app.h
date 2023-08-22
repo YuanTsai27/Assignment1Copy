@@ -19,13 +19,6 @@ using namespace std;
 class App {
  private:
 
-  //std::string username_;
-  //std::string credit_amount_;
-  static int num_accounts_;
-  static std::vector<std::string> usernames_vector_;
-  static std::vector<int> credit_balance_vector_;
-
-
 
  public:
   App();
@@ -44,18 +37,6 @@ class App {
                               const std::string &size,
                               const std::string &drink_type);
   void PrintAllSales() const;
- 
-  static int GetNumAccounts() {
-        return num_accounts_;
-  }
-
-  static const std::vector<std::string>& GetUsernamesVector() {
-      return usernames_vector_;
-  }
-
-  static const std::vector<int>& GetCreditBalanceVector() {
-      return credit_balance_vector_;
-  }
   
 };
 
