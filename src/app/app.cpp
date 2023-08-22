@@ -38,7 +38,7 @@ void App::CreateNewAccount(const std::string &username_input,
   - input credit not whole number (but account creation proceeds)
   */
 
-  
+  cout<<"Creating new Account2" <<endl;
   string m1  = "initialisation"; //initialisating messages to print
   string m2 = "initialisation";
   bool is_username_duplicated = false; //setting up boolean variables as conditionals
