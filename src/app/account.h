@@ -6,7 +6,6 @@
 
 using namespace std;
 
-/*
 class Account {
  private:
   std::string username_;
@@ -16,20 +15,18 @@ class Account {
 
  public:
   Account(const std::string &username, const std::string &credit_amount);
+
+  //getters 
   std::string GetUsername() const;
   std::string GetCredit() const;
-  int Account::GetAccNumber() const; 
+  int GetAccNumber() const; 
 
-  std::string Account::GetUsername();
+  void TopUpCredit(std::string &credit_amount);
 
-  std::string Account::GetCredit() const;
+  virtual ~Account(); 
 
-  int Account::GetAccNumber() const;
 
-  }
+  };
 
-};
-
-*/
 
 #endif  // ACCOUNT_H

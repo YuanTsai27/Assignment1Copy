@@ -1,10 +1,11 @@
 #ifndef APP_H
 #define APP_H
 
-#include "account.h"
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include "account.h"
 
 using namespace std;
 
@@ -15,10 +16,9 @@ using namespace std;
 *****************************
 */
 
-
 class App {
  private:
-
+  static vector<Account *> account_address_vector_;
 
  public:
   App();
@@ -37,9 +37,6 @@ class App {
                               const std::string &size,
                               const std::string &drink_type);
   void PrintAllSales() const;
-  
 };
-
- 
 
 #endif  // APP_H
