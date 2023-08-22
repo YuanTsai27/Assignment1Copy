@@ -93,7 +93,7 @@ hierachy of error messages
         {username_lowercased, to_string(credit_int)});
   } else {
     Account *newAccount = new Account(
-        username_input, credit_amount);  // creating account instance on heap
+        username_lowercased, to_string(credit_int));  // creating account instance on heap
 
     account_address_vector_.push_back(
         newAccount);  // registering instance pointer into static vector
@@ -161,6 +161,8 @@ void App::TopUpAccount(const std::string &username_input,
   if (!is_credit_invalid &&
       does_username_exist) {  // if conditions are satisfied, then top up
 
+      cout << "in this loop" <<endl;
+
     account_address_vector_[index]->Account::TopUpCredit(
         additional_credit_copy);
 
@@ -179,6 +181,56 @@ void App::TopUpAccount(const std::string &username_input,
 
 void App::PrintAccounts() const {
   // TODO implement
+  string a, b, c, d, e;  // %s inputs for string templates
+  string m1, m2;
+
+  std::string username, credit_balance;
+  int num_accounts = account_address_vector_.size();
+
+  int orders_completed = 0;
+  int cancelled_orders = 0;
+
+  // b represents number of accounts made
+  b = to_string(account_address_vector_.size());
+
+  // setting a and c based on plural grammars
+  if (num_accounts == 1) {
+    a = "is";
+    c = "";
+  } else {
+    a = "are";
+    c = "s";
+  }
+
+  // setting d based on punctuation grammar
+
+  if (num_accounts > 0) {
+    d = ":";
+  } else {
+    d = ".";
+  }
+
+  m1 = Message::PRINT_ACCOUNTS_HEADER.GetMessage({a, b, c, d});
+  cout << m1 << endl;
+
+  for (int i = 0; i < num_accounts;
+       i++) {  // printing out each account with their respective details line
+               // by line
+    credit_balance = account_address_vector_[i]->Account::GetCredit();
+    username = account_address_vector_[i]->Account::GetUsername();
+
+    if (orders_completed == 1) {
+      e = "";
+    } else {
+      e = "s";
+    }
+
+    m2 = Message::PRINT_ACCOUNT_ENTRY.GetMessage(
+        {username, credit_balance, to_string(orders_completed), e,
+         to_string(cancelled_orders)});
+
+    cout << m2 << endl;
+  }
 }
 
 void App::StartNewOrder(const std::string &username) {

@@ -133,11 +133,55 @@ int main(int argc, char *argv[]) {
       EXPECT_DOES_NOT_CONTAINS("0 account", true);
       EXPECT_DOES_NOT_CONTAINS("1 account", true);
       break;
-    case 6:  // Hidden test case
+    case 6:  // Task_1_CreateNewAccountDuplicate
+      RUN_COMMAND("NEW_ACCOUNT Alex 100");
+      RUN_COMMAND("NEW_ACCOUNT Alex 25");
+      RUN_COMMAND("PRINT_ACCOUNTS");
+      RUN_COMMAND("EXIT");
+
+      EXPECT_CONTAINS(
+          "Account successfully created for 'alex' with starting credit of "
+          "$100");
+      EXPECT_CONTAINS(
+          "Cannot create account for 'alex' with $25. Account already exists.");
+      EXPECT_CONTAINS("There is 1 account:");
+
+      EXPECT_DOES_NOT_CONTAINS("0 account", true);
+      EXPECT_DOES_NOT_CONTAINS("2 account", true);
       break;
-    case 7:  // Hidden test case
+    case 7:  // Task_1_CreateNewAccountDuplicateCasing
+      RUN_COMMAND("NEW_ACCOUNT alex 100");
+      RUN_COMMAND("NEW_ACCOUNT AleX 25");
+      RUN_COMMAND("PRINT_ACCOUNTS");
+      RUN_COMMAND("EXIT");
+
+      EXPECT_CONTAINS(
+          "Account successfully created for 'alex' with starting credit of "
+          "$100");
+      EXPECT_CONTAINS(
+          "Cannot create account for 'alex' with $25. Account already exists.");
+      EXPECT_CONTAINS("There is 1 account:");
+
+      EXPECT_DOES_NOT_CONTAINS("0 account", true);
+      EXPECT_DOES_NOT_CONTAINS("2 account", true);
       break;
-    case 8:  // Hidden test case
+    case 8:  // Task_1_CreateNewAccountShortUsername
+      RUN_COMMAND("NEW_ACCOUNT A 100");
+      RUN_COMMAND("NEW_ACCOUNT b 25");
+      RUN_COMMAND("PRINT_ACCOUNTS");
+      RUN_COMMAND("EXIT");
+
+      EXPECT_CONTAINS(
+          "Cannot create account for 'a' with $100. Username must be at least "
+          "2 characters long.");
+      EXPECT_CONTAINS(
+          "Cannot create account for 'b' with $25. Username must be at least 2 "
+          "characters long.");
+      EXPECT_CONTAINS("There are 0 accounts.");
+
+      EXPECT_DOES_NOT_CONTAINS("Account successfully created", true);
+      EXPECT_DOES_NOT_CONTAINS("1 account", true);
+      EXPECT_DOES_NOT_CONTAINS("2 account", true);
       break;
     case 9:  // Task_1_CreateNewAccountNegative
       RUN_COMMAND("NEW_ACCOUNT Alex -10");
@@ -155,13 +199,69 @@ int main(int argc, char *argv[]) {
       EXPECT_DOES_NOT_CONTAINS("starting credit of $-10", true);
       EXPECT_DOES_NOT_CONTAINS("invalid credit amount", true);
       break;
-    case 10:  // Hidden test case
+    case 10:  // Task_1_CreateNewAccountInvalid
+      RUN_COMMAND("NEW_ACCOUNT Alex ten");
+      RUN_COMMAND("PRINT_ACCOUNTS");
+      RUN_COMMAND("EXIT");
+
+      EXPECT_CONTAINS("'ten' is an invalid credit amount. Using $0 instead.");
+      EXPECT_CONTAINS(
+          "Account successfully created for 'alex' with starting credit of "
+          "$0.");
+      EXPECT_CONTAINS("There is 1 account:");
+
+      EXPECT_DOES_NOT_CONTAINS("0 account", true);
+      EXPECT_DOES_NOT_CONTAINS("starting credit of $ten", true);
+      EXPECT_DOES_NOT_CONTAINS("negative initial credit", true);
       break;
-    case 11:  // Hidden test case
+    case 11:  // Task_1_CreateNewTwoAccountWithPrintAccountDetails
+      RUN_COMMAND("NEW_ACCOUNT Jenny 100");
+      RUN_COMMAND("NEW_ACCOUNT Alex 25");
+      RUN_COMMAND("NEW_ACCOUNT Jen 55");
+      RUN_COMMAND("PRINT_ACCOUNTS");
+      RUN_COMMAND("EXIT");
+
+      EXPECT_CONTAINS("There are 3 accounts:");
+      EXPECT_CONTAINS(
+          "*) 'jenny' has $100 credit and has completed 0 orders (0 "
+          "cancelled)");
+      EXPECT_CONTAINS(
+          "*) 'alex' has $25 credit and has completed 0 orders (0 cancelled)");
+      EXPECT_CONTAINS(
+          "*) 'jen' has $55 credit and has completed 0 orders (0 cancelled)");
+
+      EXPECT_DOES_NOT_CONTAINS("0 account", true);
+      EXPECT_DOES_NOT_CONTAINS("1 account", true);
+      EXPECT_DOES_NOT_CONTAINS("2 account", true);
       break;
-    case 12:  // Hidden test case
+    case 12:  // Task_1_CreateNewTwoAccountWithoutPrintAccountDetails
+      RUN_COMMAND("NEW_ACCOUNT Jenny 100");
+      RUN_COMMAND("NEW_ACCOUNT Alex 25");
+      RUN_COMMAND("EXIT");
+
+      EXPECT_CONTAINS("Account successfully created");
+      EXPECT_DOES_NOT_CONTAINS("There are", true);
+      EXPECT_DOES_NOT_CONTAINS("There is", true);
+      EXPECT_DOES_NOT_CONTAINS("has $", true);
       break;
-    case 13:  // Hidden test case
+    case 13:  // Task_1_TopUpValidWithoutPrintAccounts
+      RUN_COMMAND("NEW_ACCOUNT Alex 100");
+      RUN_COMMAND("TOP_UP_CREDIT Alex 50");
+      RUN_COMMAND("EXIT");
+
+      EXPECT_CONTAINS(
+          "Account successfully created for 'alex' with starting credit of "
+          "$100.");
+      EXPECT_CONTAINS(
+          "Successfully topped up 'alex' with $50. Current balance is $150.");
+
+      EXPECT_DOES_NOT_CONTAINS("0 account", true);
+      EXPECT_DOES_NOT_CONTAINS("1 account", true);
+      EXPECT_DOES_NOT_CONTAINS("2 account", true);
+      EXPECT_DOES_NOT_CONTAINS("Successfully topped up 'alex' with $100", true);
+      EXPECT_DOES_NOT_CONTAINS("Current balance is $100", true);
+      EXPECT_DOES_NOT_CONTAINS("Current balance is $200", true);
+      EXPECT_DOES_NOT_CONTAINS("has $", true);
       break;
     case 14:  // Task_1_TopUpValid
       RUN_COMMAND("NEW_ACCOUNT Alex 100");
@@ -191,7 +291,30 @@ int main(int argc, char *argv[]) {
           "'alex' has $200 credit and has completed 0 orders (0 cancelled)",
           true);
       break;
-    case 15:  // Hidden test case
+    case 15:  // Task_1_TopUpNegativeWithPrintAccounts
+      RUN_COMMAND("NEW_ACCOUNT Alex 100");
+      RUN_COMMAND("TOP_UP_CREDIT Alex -50");
+      RUN_COMMAND("PRINT_ACCOUNTS");
+      RUN_COMMAND("EXIT");
+
+      EXPECT_CONTAINS(
+          "Cannot have a negative top up amount. Credit has not changed.");
+      EXPECT_CONTAINS("There is 1 account:");
+      EXPECT_CONTAINS(
+          "*) 'alex' has $100 credit and has completed 0 orders (0 cancelled)");
+
+      EXPECT_DOES_NOT_CONTAINS("0 account", true);
+      EXPECT_DOES_NOT_CONTAINS("2 account", true);
+      EXPECT_DOES_NOT_CONTAINS("Successfully topped up 'alex' with $100", true);
+      EXPECT_DOES_NOT_CONTAINS("Current balance is $50", true);
+      EXPECT_DOES_NOT_CONTAINS("Current balance is $150", true);
+      EXPECT_DOES_NOT_CONTAINS(
+          "'alex' has $50 credit and has completed 0 orders (0 cancelled)",
+          true);
+      EXPECT_DOES_NOT_CONTAINS(
+          "'alex' has $150 credit and has completed 0 orders (0 cancelled)",
+          true);
+      EXPECT_DOES_NOT_CONTAINS("is an invalid top up amount", true);
       break;
     case 16:  // Task_1_TopUpNegativeWithoutPrintAccounts
       RUN_COMMAND("NEW_ACCOUNT Alex 100");
@@ -216,152 +339,36 @@ int main(int argc, char *argv[]) {
       EXPECT_DOES_NOT_CONTAINS("Successfully topped up", true);
       EXPECT_DOES_NOT_CONTAINS("Current balance is", true);
       break;
-    
-    case 101:  // Task_1_TopUpCapitalisation
-      RUN_COMMAND("NEW_ACCOUNT gUS 50");
-      RUN_COMMAND("TOP_UP_CREDIT GuS 50");
-      RUN_COMMAND("PRINT_ACCOUNTS");
+    case 18:  // Task_1_TopUpUsernameShouldBeFound
+      RUN_COMMAND("NEW_ACCOUNT Alex 10");
+      RUN_COMMAND("TOP_UP_CREDIT aLeX 20");
+      RUN_COMMAND("EXIT");
 
       EXPECT_CONTAINS(
-          "Account successfully created for 'gus' with starting credit of "
-          "$50.");
+          "Account successfully created for 'alex' with starting credit of "
+          "$10.");
       EXPECT_CONTAINS(
-          "Successfully topped up 'gus' with $50. Current balance is $100.");
-      EXPECT_CONTAINS("There is 1 account:");
-      EXPECT_CONTAINS(
-          "*) 'gus' has $100 credit and has completed 0 orders (0 cancelled)");
+          "Successfully topped up 'alex' with $20. Current balance is $30.");
 
-      break;
-    case 102:  // Task_1_PrintTwo
-      RUN_COMMAND("NEW_ACCOUNT gUS 50");
-      RUN_COMMAND("NEW_ACCOUNT fRaNk 50");
-      RUN_COMMAND("PRINT_ACCOUNTS");
+      EXPECT_DOES_NOT_CONTAINS("There is 1 account:", true);
+      EXPECT_DOES_NOT_CONTAINS(
+          "*) 'alex' has $30 credit and has completed 0 orders (0 cancelled)",
+          true);
 
-      EXPECT_CONTAINS(
-          "Account successfully created for 'gus' with starting credit of "
-          "$50.");
-      EXPECT_CONTAINS(
-          "Account successfully created for 'frank' with starting credit of "
-          "$50.");
-      EXPECT_CONTAINS("There are 2 accounts:");
-      EXPECT_CONTAINS(
-          "*) 'gus' has $50 credit and has completed 0 orders (0 cancelled)");
-      EXPECT_CONTAINS(
-          "*) 'frank' has $50 credit and has completed 0 orders (0 cancelled)");
-
-      break;
-    case 103:  // Task_1_TopUpInvalid
-      RUN_COMMAND("NEW_ACCOUNT gUS 50");
-      RUN_COMMAND("TOP_UP_CREDIT GuS sAM");
-      RUN_COMMAND("PRINT_ACCOUNTS");
-
-      EXPECT_CONTAINS(
-          "Account successfully created for 'gus' with starting credit of "
-          "$50.");
-      EXPECT_CONTAINS(
-          "$'sam' is an invalid top up amount. Credit has not changed.");
-      EXPECT_CONTAINS("There is 1 account:");
-      EXPECT_CONTAINS(
-          "*) 'gus' has $50 credit and has completed 0 orders (0 cancelled)");
-
-      break;
-    case 104:  // Task_1_ThreeAccountsTopUp
-      RUN_COMMAND("NEW_ACCOUNT gUS 50");
-      RUN_COMMAND("NEW_ACCOUNT fRank 50");
-      RUN_COMMAND("NEW_ACCOUNT sam 50");
-      RUN_COMMAND("TOP_UP_CREDIT Frank 50");
-      RUN_COMMAND("PRINT_ACCOUNTS");
-      EXPECT_CONTAINS(
-          "Account successfully created for 'gus' with starting credit of "
-          "$50.");
-      EXPECT_CONTAINS(
-          "Account successfully created for 'frank' with starting credit of "
-          "$50.");
-      EXPECT_CONTAINS(
-          "Account successfully created for 'sam' with starting credit of "
-          "$50.");
-      EXPECT_CONTAINS(
-          "Successfully topped up 'frank' with $50. Current balance is $100.");
-      EXPECT_CONTAINS("There are 3 accounts:");
-      EXPECT_CONTAINS(
-          "*) 'gus' has $50 credit and has completed 0 orders (0 cancelled)");
-      EXPECT_CONTAINS(
-          "*) 'frank' has $100 credit and has completed 0 orders (0 "
-          "cancelled)");
-      EXPECT_CONTAINS(
-          "*) 'sam' has $50 credit and has completed 0 orders (0 cancelled)");
-      break;
-    case 105:  // Task_1_KeepTopUp
-      RUN_COMMAND("NEW_ACCOUNT gUS 50");
-      RUN_COMMAND("PRINT_ACCOUNTS");
-      RUN_COMMAND("NEW_ACCOUNT fRANK 50");
-      RUN_COMMAND("TOP_UP_CREDIT GuS 50");
-      RUN_COMMAND("PRINT_ACCOUNTS");
-
-      EXPECT_CONTAINS(
-          "Account successfully created for 'gus' with starting credit of "
-          "$50.");
-      EXPECT_CONTAINS("There is 1 account:");
-      EXPECT_CONTAINS(
-          "*) 'gus' has $50 credit and has completed 0 orders (0 cancelled)");
-      EXPECT_CONTAINS(
-          "Account successfully created for 'frank' with starting credit of "
-          "$50.");
-      EXPECT_CONTAINS(
-          "Successfully topped up 'gus' with $50. Current balance is $100.");
-      EXPECT_CONTAINS("There are 2 accounts:");
-      EXPECT_CONTAINS(
-          "*) 'gus' has $100 credit and has completed 0 orders (0 cancelled)");
-      EXPECT_CONTAINS(
-          "*) 'frank' has $50 credit and has completed 0 orders (0 "
-          "cancelled)");
-
-      break;
-    case 106:  // Task_1_ShortNegativeDuplicate
-      RUN_COMMAND("NEW_ACCOUNT G 50");
-      RUN_COMMAND("NEW_ACCOUNT gUS -50");
-      RUN_COMMAND("NEW_ACCOUNT gUS 50");
-      RUN_COMMAND("TOP_UP_CREDIT GuS 50");
-      RUN_COMMAND("PRINT_ACCOUNTS");
-
-      EXPECT_CONTAINS(
-          "Cannot create account for 'g' with $50. Username must be at least 2 "
-          "characters long.");
-      EXPECT_CONTAINS(
-          "Cannot have a negative initial credit. Using $0 instead.");
-      EXPECT_CONTAINS(
-          "Account successfully created for 'gus' with starting credit of "
-          "$0.");
-      EXPECT_CONTAINS(
-          "Cannot create account for 'gus' with $50. Account already exists.");
-      EXPECT_CONTAINS(
-          "Successfully topped up 'gus' with $50. Current balance is $50.");
-      EXPECT_CONTAINS("There is 1 account:");
-      EXPECT_CONTAINS(
-          "*) 'gus' has $50 credit and has completed 0 orders (0 cancelled)");
-      break;
-    case 107:  // Task_1_Task_1_NonMatching
-      RUN_COMMAND("NEW_ACCOUNT gUS moNEY");
-      RUN_COMMAND("NEW_ACCOUNT gUS 50");
-      RUN_COMMAND("TOP_UP_CREDIT frank 50");
-      RUN_COMMAND("TOP_UP_CREDIT GuS -50");
-      RUN_COMMAND("PRINT_ACCOUNTS");
-
-      EXPECT_CONTAINS(
-          "$'money' is an invalid credit amount. Using $0 instead.");
-      EXPECT_CONTAINS(
-          "Account successfully created for 'gus' with starting credit of "
-          "$0.");
-      EXPECT_CONTAINS(
-          "Cannot create account for 'gus' with $50. Account already exists.")
-      EXPECT_CONTAINS("Cannot find an account with username 'frank'.");
-      EXPECT_CONTAINS(
-          "Cannot have a negative top up amount. Credit has not changed.");
-      EXPECT_CONTAINS(
-          "*) 'gus' has $0 credit and has completed 0 orders (0 cancelled)");
-
-      break;
-    case 18:  // Hidden test case
+      EXPECT_DOES_NOT_CONTAINS("0 account", true);
+      EXPECT_DOES_NOT_CONTAINS("2 account", true);
+      EXPECT_DOES_NOT_CONTAINS("Successfully topped up 'Alex' with $100",
+                               false);
+      EXPECT_DOES_NOT_CONTAINS("Successfully topped up 'aLeX' with $100",
+                               false);
+      EXPECT_DOES_NOT_CONTAINS("Current balance is $10", true);
+      EXPECT_DOES_NOT_CONTAINS("Current balance is $20", true);
+      EXPECT_DOES_NOT_CONTAINS(
+          "'alex' has $10 credit and has completed 0 orders (0 cancelled)",
+          true);
+      EXPECT_DOES_NOT_CONTAINS(
+          "'alex' has $20 credit and has completed 0 orders (0 cancelled)",
+          true);
       break;
     case 19:  // Task_2_StartNewOrderUsernameExists
       RUN_COMMAND("NEW_ACCOUNT Alex 10");
