@@ -17,6 +17,8 @@ Account::Account(const std::string &username,
   next_account_number_++;
 }
 
+// testing
+
 std::string Account::GetUsername() const { return username_; }
 
 std::string Account::GetCredit() const { return credit_amount_; }

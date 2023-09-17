@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25.0)
+cmake_minimum_required(VERSION 3.22.0)
 project(mechdonalds VERSION 0.1.0)
 
 if(NOT(UNIX AND NOT APPLE))
